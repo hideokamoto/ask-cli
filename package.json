@@ -29,6 +29,7 @@
     "test:report": "nyc --cache npm test && nyc report --reporter=html",
     "test:browser": "npm run test:report && open coverage/index.html",
     "functional-test": "node ./node_modules/mocha/bin/_mocha test/functional/**/*-test.js",
+    "integration-test": "node ./node_modules/mocha/bin/_mocha -t 180000 test/integration/run-test.js",
     "lint": "eslint lib/builtins lib/clients lib/commands lib/controllers lib/model lib/view",
     "pre-release": "standard-version"
   },
