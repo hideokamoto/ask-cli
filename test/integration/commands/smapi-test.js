@@ -1,9 +1,10 @@
 const { expect } = require('chai');
+const parallel = require('mocha.parallel');
 
 const { run } = require('@test/integration/test-utils');
 const skillManifest = require('@test/integration/fixtures/skill-manifest.json');
 
-describe('smapi command test', () => {
+parallel('smapi command test', () => {
     const cmd = 'ask';
     const subCmd = 'smapi';
     const options = { parse: true };

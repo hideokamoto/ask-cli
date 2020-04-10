@@ -1,19 +1,21 @@
 
 const { expect } = require('chai');
+const parallel = require('mocha.parallel');
 const { HOSTED_SKILL_ID } = require('@test/integration/test-constants');
-const { run, resetTempDirectory, makeFolderInTempDirectory } = require('@test/integration/test-utils');
+const { run, resetTempDirectory, makeFolderInTempDirectory, getPathInTempDirectory } = require('@test/integration/test-utils');
 
-describe('init command test', () => {
+parallel('init command test', () => {
     const cmd = 'ask';
     const subCmd = 'init';
-    beforeEach(() => {
+    before(() => {
         resetTempDirectory();
     });
 
     it('| should init hosted skill', async () => {
+        const folderName = 'hosted-skill';
         const args = [subCmd, '--hosted-skill-id', HOSTED_SKILL_ID];
         const inputs = [
-            { match: '? Please type in your folder name' }
+            { match: '? Please type in your folder name', input: folderName }
         ];
 
         const result = await run(cmd, args, { inputs });
@@ -22,8 +24,11 @@ describe('init command test', () => {
     });
 
     it('| should init new skill', async () => {
-        makeFolderInTempDirectory('skill-package');
-        makeFolderInTempDirectory('lambda');
+        const folderName = 'new-skill';
+        makeFolderInTempDirectory(`${folderName}/skill-package`);
+        makeFolderInTempDirectory(`${folderName}/lambda`);
+
+        const cwd = getPathInTempDirectory(folderName);
 
         const args = [subCmd];
         const inputs = [
@@ -36,7 +41,7 @@ describe('init command test', () => {
             { match: '? Does this look correct?' }
         ];
 
-        const result = await run(cmd, args, { inputs });
+        const result = await run(cmd, args, { inputs, cwd });
 
         expect(result).include('succeeded');
     });

@@ -1,17 +1,21 @@
 
 const { expect } = require('chai');
+const parallel = require('mocha.parallel');
 const { run, KeySymbol, resetTempDirectory, getPathInTempDirectory } = require('@test/integration/test-utils');
 
-describe('new and deploy commands test', () => {
-    const folderName = 'some-skill-folder';
+parallel('new and deploy commands test', () => {
     let cmd;
 
-    beforeEach(() => {
-        cmd = 'ask';
+    before(() => {
         resetTempDirectory();
     });
 
+    beforeEach(() => {
+        cmd = 'ask';
+    });
+
     it('| should set up and deploy hosted skill', async () => {
+        const folderName = 'hosted-skill';
         // new
         let args = ['new'];
         const inputs = [
@@ -41,6 +45,7 @@ describe('new and deploy commands test', () => {
     });
 
     it('| should set up and deploy skill with cloud formation deployer', async () => {
+        const folderName = 'cf-deployer-skill';
         // new
         let args = ['new'];
         const inputs = [
@@ -65,6 +70,7 @@ describe('new and deploy commands test', () => {
     });
 
     it('| should set up and deploy skill with lambda deployer', async () => {
+        const folderName = 'lambda-skill';
         // new
         let args = ['new'];
         const inputs = [
