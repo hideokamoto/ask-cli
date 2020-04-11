@@ -1,9 +1,9 @@
 
 const { expect } = require('chai');
 const parallel = require('mocha.parallel');
-const { run, KeySymbol, resetTempDirectory, getPathInTempDirectory } = require('@test/integration/test-utils');
+const { run, KeySymbol, resetTempDirectory, getPathInTempDirectory, makeFolderInTempDirectory } = require('./test-utils');
 
-parallel('new and deploy commands test', () => {
+parallel.only('high level commands test', () => {
     let cmd;
 
     before(() => {
@@ -14,11 +14,34 @@ parallel('new and deploy commands test', () => {
         cmd = 'ask';
     });
 
-    it('| should set up and deploy hosted skill', async () => {
-        const folderName = 'hosted-skill';
+    it('| should init new skill', async () => {
+        const folderName = 'new-skill';
+        makeFolderInTempDirectory(`${folderName}/skill-package`);
+        makeFolderInTempDirectory(`${folderName}/lambda`);
+
+        const cwd = getPathInTempDirectory(folderName);
+
+        const args = ['init'];
+        const inputs = [
+            { match: '? Skill Id' },
+            { match: '? Skill package path' },
+            { match: '? Lambda code path' },
+            { match: '? Use AWS CloudFormation', input: 'n' },
+            { match: '? Lambda runtime' },
+            { match: '? Lambda handler' },
+            { match: '? Does this look correct?' }
+        ];
+
+        const result = await run(cmd, args, { inputs, cwd });
+
+        expect(result).include('succeeded');
+    });
+
+    it('| should set up, deploy, clone hosted skill', async () => {
+        let folderName = 'hosted-skill';
         // new
         let args = ['new'];
-        const inputs = [
+        let inputs = [
             { match: '? Choose the programming language' },
             { match: '? Choose a method to host your skill' },
             { match: '? Please type in your skill name' },
@@ -30,7 +53,7 @@ parallel('new and deploy commands test', () => {
         expect(result).include('Hosted skill provisioning finished');
 
         // deploy
-        const cwd = getPathInTempDirectory(folderName);
+        let cwd = getPathInTempDirectory(folderName);
         cmd = 'git';
         args = ['add', '.'];
         await run(cmd, args, { cwd });
@@ -42,6 +65,20 @@ parallel('new and deploy commands test', () => {
         result = await run(cmd, args, { cwd });
 
         expect(result).include('After the code pushed, please check the deployment status');
+
+        const skillId = result.match(/(amzn1\.ask\.skill\.[a-z0-9-]*)/m)[0];
+
+        folderName = 'cloned-hosted-skill';
+        cwd = getPathInTempDirectory(folderName);
+        cmd = 'ask';
+        args = ['init', '--hosted-skill-id', skillId];
+        inputs = [
+            { match: '? Please type in your folder name', input: folderName }
+        ];
+
+        result = await run(cmd, args, { inputs, cwd });
+
+        expect(result).include('successfully initialized');
     });
 
     it('| should set up and deploy skill with cloud formation deployer', async () => {
