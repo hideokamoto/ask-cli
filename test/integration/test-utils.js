@@ -21,10 +21,14 @@ const makeFolderInTempDirectory = (folderPath) => {
     fs.ensureDirSync(getPathInTempDirectory(folderPath));
 };
 
+const randomEmail = () => `${Math.random().toString(36).substring(2, 15)}-test@gmail.com`;
+
 const run = (cmd, args, options = {}) => {
     const inputs = options.inputs || [];
     const parse = options.parse || false;
     const cwd = options.cwd || tempDirectory;
+
+    fs.ensureDirSync(cwd);
 
     const childProcess = spawn(cmd, args, { cwd, stdio: [null, null, null, 'ipc'] });
 
@@ -71,5 +75,6 @@ module.exports = {
     getPathInTempDirectory,
     makeFolderInTempDirectory,
     resetTempDirectory,
+    randomEmail,
     run
 };
