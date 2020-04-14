@@ -20,13 +20,6 @@ describe('Smapi test - smapiCommandHandler function', () => {
     const arrayValue = ['test', 'test1', 'test2'];
     const arrayValueStr = arrayValue.join(ARRAY_SPLIT_DELIMITER);
 
-    const params = [
-        { name: 'skillId', in: 'path' },
-        { name: 'someNonPopulatedProperty', in: 'query' },
-        { name: 'simulationsApiRequest', in: 'body' },
-        { name: 'someJson', in: 'body' },
-        { name: 'someArray', in: 'query' }
-    ];
     const flatParamsMap = new Map([
         ['skillId', { name: 'skillId' }],
         ['someJson', { name: 'someJson', json: true }],
@@ -42,7 +35,7 @@ describe('Smapi test - smapiCommandHandler function', () => {
         }
     };
 
-    const clientStub = {};
+    const clientStub = { apiConfiguration: { apiEndpoint: null } };
     beforeEach(() => {
         sinon.stub(AuthorizationController.prototype, '_getAuthClientInstance').returns(
             { config: {} }
