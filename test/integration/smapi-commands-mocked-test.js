@@ -36,6 +36,10 @@ parallel('smapi mocked command test', () => {
     const vendorId = 'someVendorId';
     const stage = 'development';
     const locale = 'en-US';
+    const uploadId = 'someUploadId';
+    const subscriberId = 'someSubscriberId';
+    const subscriptionId = 'someSubscriptionId';
+    const partETags = JSON.stringify([{ eTag: 'someEtag', partNumber: 1 }]);
     const testersEmails = `${randomEmail()},${randomEmail()}`;
 
     before(async () => {
@@ -324,6 +328,120 @@ parallel('smapi mocked command test', () => {
         expect(result).be.an('object');
     });
 
+    it.skip('| should associate catalog with skill', async () => {
+        const args = [subCmd, 'associate-catalog-with-skill', '-s', skillId, '-c', catalogId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get content upload by id', async () => {
+        const args = [subCmd, 'get-content-upload-by-id', '-c', catalogId, '--upload-id', uploadId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should complete catalog upload', async () => {
+        const args = [subCmd, 'complete-catalog-upload', '-c', catalogId, '--upload-id', uploadId, '--part-e-tags', partETags];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should list subscribers for development events', async () => {
+        const args = [subCmd, 'list-subscribers-for-development-events'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should create subscriber for development events', async () => {
+        const args = [subCmd, 'create-subscriber-for-development-events'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get subscriber for development events', async () => {
+        const args = [subCmd, 'get-subscriber-for-development-events', '--subscriber-id', subscriberId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should set subscriber for development events', async () => {
+        const args = [subCmd, 'set-subscriber-for-development-events', '--subscriber-id', subscriberId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete subscriber for development events', async () => {
+        const args = [subCmd, 'delete-subscriber-for-development-events', '--subscriber-id', subscriberId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should list subscriptions for development events', async () => {
+        const args = [subCmd, 'list-subscriptions-for-development-events'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should create subscription for development events', async () => {
+        const args = [subCmd, 'create-subscription-for-development-events'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get subscription for development events', async () => {
+        const args = [subCmd, 'get-subscription-for-development-events', '--subscription-id', subscriptionId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should set subscription for development events', async () => {
+        const args = [subCmd, 'set-subscription-for-development-events', '--subscription-id', subscriptionId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete subscription for development events', async () => {
+        const args = [subCmd, 'delete-subscription-for-development-events', '--subscription-id', subscriptionId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should generate catalog upload url', async () => {
+        const args = [subCmd, 'generate-catalog-upload-url', '-c', catalogId, '--number-of-upload-parts', 1];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should associate isp with skill', async () => {
+        const args = [subCmd, 'associate-isp-with-skill', '--product-id', productId, '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get alexa hosted skill user permissions', async () => {
+        const args = [subCmd, 'get-alexa-hosted-skill-user-permissions', '--permission', 'somePermission'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    
+
     after(() => {
         mockServer.kill();
         // display summary
@@ -333,6 +451,8 @@ parallel('smapi mocked command test', () => {
             console.log('\n');
             console.log(`\tNot Covered ${untestedCommands.size} commands:`);
             console.log(`\t${Array.from(untestedCommands).join('\n\t')}`);
+
+            console.log(JSON.stringify(Array.from(untestedCommands)));
         }
     });
 });
