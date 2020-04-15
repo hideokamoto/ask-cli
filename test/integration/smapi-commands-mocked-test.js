@@ -9,6 +9,7 @@ const skillManifest = require('./fixtures/skill-manifest.json');
 const catalogUploadBody = require('./fixtures/catalog-upload.json');
 const inSkillProductRequestBody = require('./fixtures/create-in-skill-product-request.json');
 const accountLinkingRequest = require('./fixtures/account-linking-request.json');
+const interactionModel = require('./fixtures/interaction-model.json');
 
 const processor = new CliCustomizationProcessor();
 const modelIntrospector = new ModelIntrospector();
@@ -36,9 +37,35 @@ parallel('smapi mocked command test', () => {
     const vendorId = 'someVendorId';
     const stage = 'development';
     const locale = 'en-US';
+    const location = 'US';
     const uploadId = 'someUploadId';
     const subscriberId = 'someSubscriberId';
     const subscriptionId = 'someSubscriptionId';
+    const updateRequestId = 'someUpdateRequestId';
+    const version = '2.0.0';
+    const simulationId = 'someSimulationId';
+    const slotTypeId = 'someSlotTypeId';
+    const slotType = JSON.stringify({
+        slotType: {
+            name: 'string',
+            description: 'string'
+        },
+        vendorId: 'string'
+    });
+    const sslCertificatePayload = JSON.stringify({
+        sslCertificate: 'string',
+        regions: {
+            additionalProp1: {
+                sslCertificate: 'string'
+            },
+            additionalProp2: {
+                sslCertificate: 'string'
+            },
+            additionalProp3: {
+                sslCertificate: 'string'
+            }
+        }
+    });
     const partETags = JSON.stringify([{ eTag: 'someEtag', partNumber: 1 }]);
     const testersEmails = `${randomEmail()},${randomEmail()}`;
 
@@ -174,7 +201,7 @@ parallel('smapi mocked command test', () => {
         const args = [subCmd, 'update-interaction-model-catalog-version', '-c', catalogId, '--version', 1, '--description', 'test'];
         addCoveredCommand(args);
         const result = await run(cmd, args, { ...options, parse: false });
-        expect(result).match(/^[0-9]+\.[0-9]+\.[0-9]+/);
+        expect(result).include('Command executed successfully!');
     });
 
     it('| should simulate skill', async () => {
@@ -427,7 +454,405 @@ parallel('smapi mocked command test', () => {
         expect(result).be.an('object');
     });
 
-    
+    it.skip('| should start beta test', async () => {
+        const args = [subCmd, 'start-beta-test', '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should end beta test', async () => {
+        const args = [subCmd, 'end-beta-test', '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get certifications list', async () => {
+        const args = [subCmd, 'get-certifications-list', '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get certification review', async () => {
+        const args = [subCmd, 'get-certification-review', '-s', skillId, '-c', catalogId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get skill enablement status', async () => {
+        const args = [subCmd, 'get-skill-enablement-status', '-s', skillId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it.skip('| should set skill enablement', async () => {
+        const args = [subCmd, 'set-skill-enablement', '-s', skillId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should delete skill enablement', async () => {
+        const args = [subCmd, 'delete-skill-enablement', '-s', skillId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should profile nlu', async () => {
+        const args = [subCmd, 'profile-nlu', '-u', 'test', '--multi-turn-token', 'someToken', '-s', skillId, '-g', stage, '-l', locale];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get interaction model', async () => {
+        const args = [subCmd, 'get-interaction-model', '-s', skillId, '-g', stage, '-l', locale];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get interaction model metadata', async () => {
+        const args = [subCmd, 'get-interaction-model-metadata', '-s', skillId, '-g', stage, '-l', locale];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should set interaction model', async () => {
+        const args = [subCmd, 'set-interaction-model', '-s', skillId, '-g',
+            stage, '-l', locale, '--interaction-model', JSON.stringify(interactionModel)];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should list interaction model catalogs', async () => {
+        const args = [subCmd, 'list-interaction-model-catalogs'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should create interaction model catalog', async () => {
+        const args = [subCmd, 'create-interaction-model-catalog', '--vendor-id', vendorId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get interaction model catalog definition', async () => {
+        const args = [subCmd, 'get-interaction-model-catalog-definition', '-c', catalogId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete interaction model catalog', async () => {
+        const args = [subCmd, 'delete-interaction-model-catalog', '-c', catalogId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get interaction model catalog update status', async () => {
+        const args = [subCmd, 'get-interaction-model-catalog-update-status', '-c', catalogId, '--update-request-id', updateRequestId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should update interaction model catalog', async () => {
+        // TODO --slot-type-description should be mandatory
+        const args = [subCmd, 'update-interaction-model-catalog', '-c', catalogId, '--slot-type-description', 'someDescription'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should create interaction model catalog version', async () => {
+        const args = [subCmd, 'create-interaction-model-catalog-version', '-c', catalogId, '--description', 'someDescription'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get interaction model catalog version', async () => {
+        const args = [subCmd, 'get-interaction-model-catalog-version', '-c', catalogId, '--version', version];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete interaction model catalog version', async () => {
+        const args = [subCmd, 'delete-interaction-model-catalog-version', '-c', catalogId, '--version', version];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get interaction model catalog values', async () => {
+        const args = [subCmd, 'get-interaction-model-catalog-values', '-c', catalogId, '--version', version];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get interaction model version', async () => {
+        const args = [subCmd, 'get-interaction-model-version', '-s', skillId, '-g', stage, '-l', locale, '--version', version];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should list interaction model versions', async () => {
+        const args = [subCmd, 'list-interaction-model-versions', '-s', skillId, '-g', stage, '-l', locale];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should list interaction model slot types', async () => {
+        const args = [subCmd, 'list-interaction-model-slot-types'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should create interaction model slot type', async () => {
+        const args = [subCmd, 'create-interaction-model-slot-type', '--slot-type', slotType];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get interaction model slot type definition', async () => {
+        const args = [subCmd, 'get-interaction-model-slot-type-definition', '--slot-type-id', slotTypeId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete interaction model slot type', async () => {
+        const args = [subCmd, 'delete-interaction-model-slot-type', '--slot-type-id', slotTypeId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get interaction model slot type build status', async () => {
+        const args = [subCmd, 'get-interaction-model-slot-type-build-status', '--slot-type-id', slotTypeId, '--update-request-id', updateRequestId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should update interaction model slot type', async () => {
+        // TODO --slot-type-description needs to be required
+        const args = [subCmd, 'update-interaction-model-slot-type', '--slot-type-id', slotTypeId, '--slot-type-description', 'someDescription'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should list interaction model slot type versions', async () => {
+        const args = [subCmd, 'list-interaction-model-slot-type-versions', '--slot-type-id', slotTypeId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should create interaction model slot type version', async () => {
+        const args = [subCmd, 'create-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--slot-type', slotType];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get interaction model slot type version', async () => {
+        const args = [subCmd, 'get-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--version', version];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete interaction model slot type version', async () => {
+        const args = [subCmd, 'delete-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--version', version];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should update interaction model slot type version', async () => {
+        const args = [subCmd, 'update-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--version', version,
+            '--slot-type-description', 'someDescription'
+        ];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get skill manifest', async () => {
+        const args = [subCmd, 'get-skill-manifest', '-s', skillId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should update skill manifest', async () => {
+        const args = [subCmd, 'update-skill-manifest', '-s', skillId, '-g', stage, '--manifest', JSON.stringify(skillManifest)];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    // TODO look into it - content type most likely
+    it.skip('| should get skill metrics', async () => {
+        const args = [subCmd, 'get-skill-metrics', '-s', skillId, '--start-time', ' 2017-07-21T17:32:28Z',
+            '--end-time', ' 2017-07-21T17:32:28Z', '--period', 'P3', '--metric', 'someMetric', '-g', stage, '--skill-type', 'smartHome'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should set private distribution account id', async () => {
+        const args = [subCmd, 'set-private-distribution-account-id', '-s', skillId, '-g', stage, '--id', 'someId'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete private distribution account id', async () => {
+        const args = [subCmd, 'delete-private-distribution-account-id', '-s', skillId, '-g', stage, '--id', 'someId'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should list private distribution accounts', async () => {
+        const args = [subCmd, 'list-private-distribution-accounts', '-s', skillId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get skill simulation', async () => {
+        const args = [subCmd, 'get-skill-simulation', '-s', skillId, '-g', stage, '-i', simulationId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should submit skill validation', async () => {
+        const args = [subCmd, 'submit-skill-validation', '-l', locale, '-s', skillId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get skill validations', async () => {
+        const args = [subCmd, 'get-skill-validations', '-s', skillId, '-i', simulationId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should delete skill', async () => {
+        const args = [subCmd, 'delete-skill', '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get ssl certificates', async () => {
+        const args = [subCmd, 'get-ssl-certificates', '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should set ssl certificates', async () => {
+        const args = [subCmd, 'set-ssl-certificates', '-s', skillId, '--ssl-certificate-payload', sslCertificatePayload];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it.skip('| should submit skill for certification', async () => {
+        const args = [subCmd, 'submit-skill-for-certification', '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should withdraw skill from certification', async () => {
+        const args = [subCmd, 'withdraw-skill-from-certification', '-s', skillId, '--message', 'someMessage'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it.skip('| should create export request for skill', async () => {
+        const args = [subCmd, 'create-export-request-for-skill', '-s', skillId, '-g', stage];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should get status of export request', async () => {
+        const args = [subCmd, 'get-status-of-export-request', '--export-id', 'someExportId'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should create skill package', async () => {
+        const args = [subCmd, 'create-skill-package', '--vendor-id', vendorId, '--location', location];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should import skill package', async () => {
+        const args = [subCmd, 'import-skill-package', '--location', location, '-s', skillId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, { ...options, parse: false });
+        expect(result).include('Command executed successfully!');
+    });
+
+    it('| should get import status', async () => {
+        const args = [subCmd, 'get-import-status', '--import-id', 'someImportId'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it.skip('| should create upload url', async () => {
+        const args = [subCmd, 'create-upload-url'];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should query development audit logs', async () => {
+        const args = [subCmd, 'query-development-audit-logs', '--vendor-id', vendorId];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
+
+    it('| should invoke skill end point', async () => {
+        const args = [subCmd, 'invoke-skill-end-point', '-s', skillId, '-g', stage,
+            '--endpoint-region', 'someRegion', '--skill-request-body', JSON.stringify({})];
+        addCoveredCommand(args);
+        const result = await run(cmd, args, options);
+        expect(result).be.an('object');
+    });
 
     after(() => {
         mockServer.kill();
@@ -438,8 +863,6 @@ parallel('smapi mocked command test', () => {
             console.log('\n');
             console.log(`\tNot Covered ${untestedCommands.size} commands:`);
             console.log(`\t${Array.from(untestedCommands).join('\n\t')}`);
-
-            console.log(JSON.stringify(Array.from(untestedCommands)));
         }
     });
 });

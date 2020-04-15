@@ -20,7 +20,7 @@ commander
     .description('Command Line Interface for Alexa Skill Kit')
     .command('smapi', 'list of Alexa Skill Management API commands')
     .command('util', 'tooling functions when using ask-cli to manage Alexa Skill')
-    .version(require('../package.json').version)
+    .version(require('../package.json').version, '-V, --cli-version')
     .parse(process.argv);
 
 const ALLOWED_ASK_ARGV_2 = ['configure', 'deploy', 'new', 'init', 'dialog', 'smapi', 'util', 'help', '-v', '--version', '-h', '--help'];
