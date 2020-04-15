@@ -198,7 +198,7 @@ parallel('smapi mocked command test', () => {
     });
 
     it('| should update interaction model catalog version and return version number', async () => {
-        const args = [subCmd, 'update-interaction-model-catalog-version', '-c', catalogId, '--version', 1, '--description', 'test'];
+        const args = [subCmd, 'update-interaction-model-catalog-version', '-c', catalogId, '--vers', 1, '--description', 'test'];
         addCoveredCommand(args);
         const result = await run(cmd, args, { ...options, parse: false });
         expect(result).include('Command executed successfully!');
@@ -583,28 +583,28 @@ parallel('smapi mocked command test', () => {
     });
 
     it('| should get interaction model catalog version', async () => {
-        const args = [subCmd, 'get-interaction-model-catalog-version', '-c', catalogId, '--version', version];
+        const args = [subCmd, 'get-interaction-model-catalog-version', '-c', catalogId, '--vers', version];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
         expect(result).be.an('object');
     });
 
     it('| should delete interaction model catalog version', async () => {
-        const args = [subCmd, 'delete-interaction-model-catalog-version', '-c', catalogId, '--version', version];
+        const args = [subCmd, 'delete-interaction-model-catalog-version', '-c', catalogId, '--vers', version];
         addCoveredCommand(args);
         const result = await run(cmd, args, { ...options, parse: false });
         expect(result).include('Command executed successfully!');
     });
 
     it('| should get interaction model catalog values', async () => {
-        const args = [subCmd, 'get-interaction-model-catalog-values', '-c', catalogId, '--version', version];
+        const args = [subCmd, 'get-interaction-model-catalog-values', '-c', catalogId, '--vers', version];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
         expect(result).be.an('object');
     });
 
     it('| should get interaction model version', async () => {
-        const args = [subCmd, 'get-interaction-model-version', '-s', skillId, '-g', stage, '-l', locale, '--version', version];
+        const args = [subCmd, 'get-interaction-model-version', '-s', skillId, '-g', stage, '-l', locale, '--vers', version];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
         expect(result).be.an('object');
@@ -675,21 +675,21 @@ parallel('smapi mocked command test', () => {
     });
 
     it('| should get interaction model slot type version', async () => {
-        const args = [subCmd, 'get-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--version', version];
+        const args = [subCmd, 'get-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--vers', version];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
         expect(result).be.an('object');
     });
 
     it('| should delete interaction model slot type version', async () => {
-        const args = [subCmd, 'delete-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--version', version];
+        const args = [subCmd, 'delete-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--vers', version];
         addCoveredCommand(args);
         const result = await run(cmd, args, { ...options, parse: false });
         expect(result).include('Command executed successfully!');
     });
 
     it('| should update interaction model slot type version', async () => {
-        const args = [subCmd, 'update-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--version', version,
+        const args = [subCmd, 'update-interaction-model-slot-type-version', '--slot-type-id', slotTypeId, '--vers', version,
             '--slot-type-description', 'someDescription'
         ];
         addCoveredCommand(args);
