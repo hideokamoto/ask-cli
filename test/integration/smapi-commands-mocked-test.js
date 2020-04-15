@@ -276,13 +276,6 @@ parallel('smapi mocked command test', () => {
         expect(result).be.an('object');
     });
 
-    it.skip('| should associate isp with skill', async () => {
-        const args = [subCmd, 'associate-isp-with-skill', '--product-id', productId, '-s', skillId];
-        addCoveredCommand(args);
-        const result = await run(cmd, args, { ...options, parse: false });
-        expect(result).include('Command executed successfully!');
-    });
-
     it('| should disassociate isp with skill', async () => {
         const args = [subCmd, 'disassociate-isp-with-skill', '--product-id', productId, '-s', skillId];
         addCoveredCommand(args);
@@ -328,12 +321,6 @@ parallel('smapi mocked command test', () => {
         expect(result).be.an('object');
     });
 
-    it.skip('| should associate catalog with skill', async () => {
-        const args = [subCmd, 'associate-catalog-with-skill', '-s', skillId, '-c', catalogId];
-        addCoveredCommand(args);
-        const result = await run(cmd, args, options);
-        expect(result).be.an('object');
-    });
 
     it('| should get content upload by id', async () => {
         const args = [subCmd, 'get-content-upload-by-id', '-c', catalogId, '--upload-id', uploadId];
