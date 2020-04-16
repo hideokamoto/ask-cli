@@ -13,8 +13,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '10.x'
+    - shell: bash
+    env:
+      CLI_CONFIG: ${{ secrets.cliConfig }}
+    run: |
+      echo "$CLI_CONFIG" > $HOME/.ask/cli_config
+    run: |
+      echo "%cliConfig%" > $HOME/.ask/cli_config
     - run: npm install
     - run: npm link
     - run: npm run integration-test:smapi
-      env:
-        ASK_REFRESH_TOKEN: ${{ secrets.lwaRefreshToken }}

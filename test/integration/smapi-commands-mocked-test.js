@@ -75,7 +75,7 @@ parallel('smapi mocked command test', () => {
         mockServer = await startMockServer();
     });
 
-    it('| should display vendor list', async () => {
+    it.only('| should display vendor list', async () => {
         const args = [subCmd, 'get-vendor-list'];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
