@@ -1,0 +1,20 @@
+name: Integration Test
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - run: npm ci
+    - run: npm link
+    - run: npm run integration-test:smapi
+      env:
+        ASK_REFRESH_TOKEN: ${{ secrets.lwaRefreshToken }}
