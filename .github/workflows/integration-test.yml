@@ -18,8 +18,6 @@ jobs:
       CLI_CONFIG: ${{ secrets.cliConfig }}
     run: |
       echo "$CLI_CONFIG" > $HOME/.ask/cli_config
-    run: |
-      echo "%cliConfig%" > $HOME/.ask/cli_config
     - run: npm install
     - run: npm link
     - run: npm run integration-test:smapi
