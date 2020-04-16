@@ -14,7 +14,6 @@ jobs:
       run: |
         mkdir $HOME/.ask
         echo "$CLI_CONFIG" > $HOME/.ask/cli_config
-        cat $HOME/.ask/cli_config 
     - uses: actions/checkout@v2
     - name: Use Node.js
       uses: actions/setup-node@v1

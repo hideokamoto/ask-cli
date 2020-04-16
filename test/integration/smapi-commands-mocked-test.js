@@ -75,14 +75,14 @@ parallel('smapi mocked command test', () => {
         mockServer = await startMockServer();
     });
 
-    it.only('| should display vendor list', async () => {
+    it('| should display vendor list', async () => {
         const args = [subCmd, 'get-vendor-list'];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
         expect(result).be.an('object');
     });
 
-    it.only('| should list skills for vendor', async () => {
+    it('| should list skills for vendor', async () => {
         const args = [subCmd, 'list-skills-for-vendor', '--max-results', 1];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
