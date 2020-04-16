@@ -29,7 +29,7 @@
     "test:report": "nyc --cache npm test && nyc report --reporter=html",
     "test:browser": "npm run test:report && open coverage/index.html",
     "integration-test:high-level": "mocha -t 180000 test/integration/high-level-commands-test.js",
-    "integration-test:smapi": "mocha -t 60000 test/integration/smapi-commands-mocked-test.js",
+    "integration-test:smapi": "mocha -t 180000 test/integration/smapi-commands-mocked-test.js",
     "lint": "eslint lib/builtins lib/clients lib/commands lib/controllers lib/model lib/view",
     "pre-release": "standard-version",
     "prism": "prism"

@@ -11,6 +11,8 @@ const inSkillProductRequestBody = require('./fixtures/create-in-skill-product-re
 const accountLinkingRequest = require('./fixtures/account-linking-request.json');
 const interactionModel = require('./fixtures/interaction-model.json');
 
+parallel.limit(8);
+
 const processor = new CliCustomizationProcessor();
 const modelIntrospector = new ModelIntrospector();
 const untestedCommands = new Set([...modelIntrospector.getOperations().keys()].map(processor.processOperationName));
