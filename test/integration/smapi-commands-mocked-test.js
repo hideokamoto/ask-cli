@@ -82,7 +82,7 @@ parallel('smapi mocked command test', () => {
         expect(result).be.an('object');
     });
 
-    it('| should list skills for vendor', async () => {
+    it.only('| should list skills for vendor', async () => {
         const args = [subCmd, 'list-skills-for-vendor', '--max-results', 1];
         addCoveredCommand(args);
         const result = await run(cmd, args, options);
